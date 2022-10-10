@@ -1,18 +1,25 @@
 import { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
-function Sort({ value, onChangeSort }) {
+import { setSort } from '../redux/slices/filterSlice';
+
+const list = [
+  { name: 'Популярности', sortProperty: 'rating' },
+  { name: '-Популярности', sortProperty: '-rating' },
+  { name: 'Цене', sortProperty: 'price' },
+  { name: '-Цене', sortProperty: '-price' },
+  { name: 'Алфавиту', sortProperty: 'title' },
+  { name: '-Алфавиту', sortProperty: '-title' },
+];
+
+function Sort() {
+  const dispatch = useDispatch();
+  const { name, sortProperty } = useSelector((state) => state.filter.sort);
+
   const [isVisible, setIsVisible] = useState(false);
-  const list = [
-    { name: 'Популярности', sort: 'rating' },
-    { name: '-Популярности', sort: '-rating' },
-    { name: 'Цене', sort: 'price' },
-    { name: '-Цене', sort: '-price' },
-    { name: 'Алфавиту', sort: 'title' },
-    { name: '-Алфавиту', sort: '-title' },
-  ];
 
-  const onClickListItem = (i) => {
-    onChangeSort(i);
+  const onClickListItem = (obj) => {
+    dispatch(setSort(obj));
     setIsVisible(false);
   };
   return (
@@ -35,7 +42,7 @@ function Sort({ value, onChangeSort }) {
           onMouseEnter={() => setIsVisible(true)}
           // onMouseLeave={() => setIsVisible(false)}
         >
-          {value.name}
+          {name}
         </span>
       </div>
       {isVisible && (
@@ -44,7 +51,7 @@ function Sort({ value, onChangeSort }) {
             {list.map((obj, i) => (
               <li
                 key={i}
-                className={value.sort === obj.sort ? 'active' : ''}
+                className={sortProperty === obj.sortProperty ? 'active' : ''}
                 onClick={() => onClickListItem(obj)}
               >
                 {obj.name}
