@@ -1,9 +1,37 @@
 import React from 'react';
+import debounce from 'lodash.debounce';
 import { SearchContext } from '../../App';
 
 import styles from './Search.module.scss';
 const Search = () => {
-  const { searchValue, setSearchValue } = React.useContext(SearchContext);
+  const [value, setValue] = React.useState('');
+  const { setSearchValue } = React.useContext(SearchContext);
+  const inputRef = React.useRef();
+
+  const updateSearchValue = React.useCallback(
+    debounce((str) => {
+      setSearchValue(str);
+    }, 1000),
+    []
+  );
+  // useCallback создаст нам такую ф-цию единожды, и в дальнейшем при перерисовке Search он не будет пересоздавать эту ф-цию, а она так же будет лежать в памяти
+  // в [] указывается список зависимостей, при изменении которых мы все таки будем пересоздавать нашу ф-цию, которая внутри useCallback
+
+  const onClickClear = () => {
+    setSearchValue('');
+    setValue('');
+    // document.querySelector('input').focus();  // так лучше не делать
+    inputRef.current.focus(); // так лучше делать
+  };
+
+  const onChangeInput = (e) => {
+    setValue(e.target.value);
+    updateSearchValue(e.target.value);
+  };
+
+  React.useEffect(() => {
+    document.querySelector('input');
+  }, []);
 
   return (
     <div className={styles.root}>
@@ -18,14 +46,15 @@ const Search = () => {
         </g>
       </svg>
       <input
-        value={searchValue}
-        onChange={(e) => setSearchValue(e.target.value)}
+        ref={inputRef}
+        value={value}
+        onChange={onChangeInput}
         className={styles.input}
         placeholder="Поиск пиццы..."
       />
-      {searchValue && (
+      {value && (
         <svg
-          onClick={() => setSearchValue('')}
+          onClick={onClickClear}
           className={styles.clear}
           xmlns="http://www.w3.org/2000/svg"
           height="48"
