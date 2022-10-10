@@ -1,16 +1,26 @@
 import React from 'react';
+import qs from 'qs';
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Categories from '../components/Categories';
-import Sort from '../components/Sort';
+import Sort, { list } from '../components/Sort';
 import PizzaBlock from '../components/PizzaBlock';
 import Skeleton from '../components/PizzaBlock/Skeleton';
 import Pagination from '../components/Pagination';
 import { SearchContext } from '../App';
-import { setcategotyId, setCurrentPage } from '../redux/slices/filterSlice';
+import {
+  setcategotyId,
+  setCurrentPage,
+  setFilters,
+} from '../redux/slices/filterSlice';
 
 const Home = () => {
+  console.log('1 отрисовали хоум');
+  const navigate = useNavigate();
+  const isSearch = React.useRef(false);
+  const isMounted = React.useRef(false);
   const { categoryId, sort, currentPage } = useSelector(
     (state) => state.filter
   );
@@ -31,9 +41,7 @@ const Home = () => {
     dispatch(setCurrentPage(number));
   };
 
-  console.log(categoryId);
-
-  useEffect(() => {
+  const fetchPizzas = () => {
     setIsLoading(true);
 
     const order = sortType.includes('-') ? 'asc' : 'desc';
@@ -49,14 +57,65 @@ const Home = () => {
         setItems(res.data);
         setIsLoading(false);
       });
+  };
+
+  // При первом рендере и так же если изменится одна из переменных categoryId, sortType, currentPage
+  React.useEffect(() => {
+    console.log('2 проверили, был ли этот компонент отрисован до этого');
+    if (isMounted.current) {
+      // проверяем, был ли этот компонент (Home) уже на странице, или сейчас рендерится первый раз. Если уже был, выполняем код в фигурных скобках, если монтируется в первый раз, тогда не выполняем код со скобок, а только меняем флаг isMounted
+      const queryString = qs.stringify({
+        // этот код, если наш home уже был отрендерен до этого и поменялось одно из значени в стейте, он вшивает строку в строку URL, если же компонент рендерится впервые, в URL строке будет только наш домен без остальных фильтров.
+        sortProperty: sortType,
+        categoryId,
+        currentPage,
+      });
+      console.log('узнали, что это уже не первая отрисовка');
+      navigate(`?${queryString}`);
+    }
+
+    isMounted.current = true;
+  }, [categoryId, sortType, currentPage]);
+
+  // ======= Посмотрели что еще не был монтирован, поменяли флаг и пошли дальше
+
+  //  Только при первом рендере
+  React.useEffect(() => {
+    if (window.location.search) {
+      // проверяем есть ли в строке кроме названия магазина какие то параметры для фильтрации, если есть выполняем след действия
+      const params = qs.parse(window.location.search.substring(1));
+
+      const sort = list.find((obj) => obj.sortProperty === params.sortProperty);
+
+      dispatch(
+        setFilters({
+          ...params,
+          sort,
+        })
+      );
+      isSearch.current = true; // то что мы тут поставили тру гарантирует нам, что при первой загрузке сайта после того как мы поменяли стейт и нашли нужные нам пиццы больше не будет запускаться ф-ция из след юзеффекта fetchPizza со строки 106 (только на время первой загрузки)
+      console.log(
+        '3 посмотрели было ли что то в адресной строке, если да, поменяли стейт'
+      );
+    }
+  }, []);
+
+  // ======= Вообще ниче не сделали, т.к строки не было в УРЛЕ
+
+  // если был первый рендер, запрашиваем пиццы
+  useEffect(() => {
     window.scrollTo(0, 0);
+    console.log('4 поменяли изсерч на фолс');
+    if (!isSearch.current) {
+      // если при первой загрузке предидущий юзеффект отработал, этот фетч пока не отрабатывает, а только подготовливаем флаг isSearch для последующих действий, и когда будут происходить в след раз изменения на этом сайте, предидущий юзеффект уже отрабатывать не будет, а будет отрабатывать этот fetchPizzas
+      console.log('5 запросили нужные нам пиццы');
+      fetchPizzas();
+    }
+
+    isSearch.current = false;
   }, [categoryId, sortType, searchValue, currentPage]);
 
-  const pizzas = items
-    // .filter((obj) =>
-    //   obj.title.toLowerCase().includes(searchValue.toLowerCase())
-    // )
-    .map((obj) => <PizzaBlock key={obj.id} {...obj} />);
+  const pizzas = items.map((obj) => <PizzaBlock key={obj.id} {...obj} />);
   const skeletons = [...new Array(6)].map((_, i) => <Skeleton key={i} />);
 
   return (
