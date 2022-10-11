@@ -11,7 +11,12 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     addItem(state, action) {
-      const findItem = state.items.find((obj) => obj.id === action.payload.id);
+      const findItem = state.items.find(
+        (obj) =>
+          obj.id === action.payload.id &&
+          obj.type === action.payload.type &&
+          obj.size === action.payload.size
+      );
 
       if (findItem) {
         findItem.count++;
@@ -25,22 +30,24 @@ const cartSlice = createSlice({
       state.totalPrice += action.payload.price;
     },
     removeItem(state, action) {
-      const findItem = state.items.find((obj) => obj.id === action.payload);
+      const findItem = state.items.find((obj) => obj.nanoid === action.payload);
       state.totalPrice -= findItem.price * findItem.count;
-      state.items = state.items.filter((item) => item.id !== action.payload);
+      state.items = state.items.filter(
+        (item) => item.nanoid !== action.payload
+      );
     },
     clearItems(state, action) {
       state.items = [];
       state.totalPrice = 0;
     },
     plusItem(state, action) {
-      const findItem = state.items.find((obj) => obj.id === action.payload);
+      const findItem = state.items.find((obj) => obj.nanoid === action.payload);
 
       findItem.count++;
       state.totalPrice += findItem.price;
     },
     minusItem(state, action) {
-      const findItem = state.items.find((obj) => obj.id === action.payload);
+      const findItem = state.items.find((obj) => obj.nanoid === action.payload);
 
       findItem.count--;
       state.totalPrice -= findItem.price;

@@ -7,9 +7,15 @@ const typeNames = ['Тонкое', 'Традиционное'];
 
 function PizzaBlock({ id, title, price, imageUrl, sizes, types }) {
   const dispatch = useDispatch();
-  const cartItem = useSelector((state) =>
-    state.cart.items.find((item) => item.id === id)
+  const cartItems = useSelector((state) =>
+    state.cart.items.filter((item) => item.id === id)
   );
+  let num = null;
+  if (cartItems.length > 0) {
+    num = cartItems.reduce((prev, item) => {
+      return prev + item.count;
+    }, 0);
+  }
   const [activeType, setActiveType] = useState(0);
   const [activeSize, setActiveSize] = useState(0);
 
@@ -20,7 +26,7 @@ function PizzaBlock({ id, title, price, imageUrl, sizes, types }) {
       price,
       imageUrl,
       type: typeNames[activeType],
-      size: activeSize,
+      size: sizes[activeSize],
     };
     dispatch(addItem(item));
   };
@@ -75,7 +81,7 @@ function PizzaBlock({ id, title, price, imageUrl, sizes, types }) {
               />
             </svg>
             <span>Добавить</span>
-            {cartItem && <i>{cartItem.count}</i>}
+            {num && <i>{num}</i>}
           </button>
         </div>
       </div>

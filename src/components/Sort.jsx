@@ -28,7 +28,6 @@ function Sort() {
     const handleClickOutside = (e) => {
       if (!e.path.includes(sortRef.current)) {
         setIsVisible(false);
-        console.log('click outside');
       }
     };
 
