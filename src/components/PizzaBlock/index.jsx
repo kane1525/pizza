@@ -6,7 +6,6 @@ import { addItem } from '../../redux/slices/cartSlice';
 const typeNames = ['Тонкое', 'Традиционное'];
 
 function PizzaBlock({ id, title, price, imageUrl, sizes, types }) {
-  // console.log(id, title, price, imageUrl, sizes, types);
   const dispatch = useDispatch();
   const cartItems = useSelector((state) =>
     state.cart.items.filter((item) => item.id === id)

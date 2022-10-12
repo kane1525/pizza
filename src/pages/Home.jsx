@@ -1,6 +1,6 @@
 import React from 'react';
 import qs from 'qs';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import Categories from '../components/Categories';
@@ -24,7 +24,6 @@ const Home = () => {
     (state) => state.filter
   );
   const { items, status } = useSelector((state) => state.pizzas);
-  // console.log(items);
   const sortType = sort.sortProperty;
 
   const { searchValue } = React.useContext(SearchContext);
@@ -44,7 +43,6 @@ const Home = () => {
     const sortBy = sortType.replace('-', '');
     const category = categoryId > 0 ? `category=${categoryId}` : '';
     const search = searchValue ? `&title=${searchValue}` : '';
-    console.log('getPizzas отработал');
 
     dispatch(
       fetchPizzas({
@@ -73,7 +71,6 @@ const Home = () => {
       );
       isSearch.current = true;
     }
-    // isMounted.current = true;
   }, []);
 
   React.useEffect(() => {
@@ -85,36 +82,17 @@ const Home = () => {
       });
       navigate(`?${queryString}`);
     }
-
-    // if (!window.location.search) {
-    //   console.log(111);
-    //   fetchPizzas(); // непонятно зачем тут это написано, и без этого работает так же, ТАК КАК ПИЦЦЫ ПОЛУЧАЮТСЯ С ПОМОЩЬЮ getPizzas со след useEffect даже при первой загрузке
-    //   // что делает fetchPizzas?
-    // }
   }, [categoryId, sortType, searchValue, currentPage]);
 
   useEffect(() => {
     if (!isSearch.current) {
       getPizzas();
-      console.log('отправили запрос');
     }
     isSearch.current = false;
     isMounted.current = true;
-    // if (!isMounted.current) {
-    //   isMounted.current = true;
-    // }
-    // что делает getPizzas? берет параметры из стейта фильтров и используя их генерирует запрос по своему шаблону (указанному в пиццаслайсе), получает конкертные пиццы, которые нужны и меняет стейт, что приводит к ререндеру страницы с нужными пиццами
   }, [categoryId, sortType, searchValue, currentPage]);
 
-  // ======= Вообще ниче не сделали, т.к строки не было в УРЛЕ
-
   const pizzas = items.map((obj) => <PizzaBlock key={obj.id} {...obj} />);
-  // items - это массив с объектами
-  // каждый объект в нем - это данные про пиццы, которые мы получили с бекенда после запроса createAsyncThunk
-  // там будут лежать только те пиццы, которые нужно рендерить
-  // мы их получили благодаря правильно динамически сформированному запросу на бекенд
-  // и соотвественно теперь мы делаем для каждого такого объекта карточку на сайте и потом когда нам будет нужно, мы вставим эти карточки на наш сайт
-  // мы получили масси с объектами тех пицц, которые нужно показать, теперь мы в этом массиве каждый отдельный объект с информацией передаем в наш строительный алгоритм pizzablock indes.jsx. Передаем по цепочке, и соотвественно там этот строительный шаблон принимает по одному объекту и для каждого нашего переданного объекта он сделает карточку видимую, которую можно будет показать на сайте и он сделает стольок карточек, сколько таких объектов будет в массииве, который мы мапим, и все эти карточки поместятся в переменную pizzas
   const skeletons = [...new Array(6)].map((_, i) => <Skeleton key={i} />);
 
   return (
