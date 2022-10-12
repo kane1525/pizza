@@ -3,7 +3,6 @@ import qs from 'qs';
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import Categories from '../components/Categories';
 import Sort, { list } from '../components/Sort';
 import PizzaBlock from '../components/PizzaBlock';
@@ -15,21 +14,19 @@ import {
   setCurrentPage,
   setFilters,
 } from '../redux/slices/filterSlice';
+import { fetchPizzas } from '../redux/slices/pizzaSlice';
 
 const Home = () => {
-  // console.log('1 отрисовали хоум');
   const navigate = useNavigate();
-  const isSearch = React.useRef(false);
   const isMounted = React.useRef(false);
   const { categoryId, sort, currentPage } = useSelector(
     (state) => state.filter
   );
-  // const { sortProperty: sortType } = useSelector((state) => state.filter.sort);
+  const { items, status } = useSelector((state) => state.pizzas);
+  // console.log(items);
   const sortType = sort.sortProperty;
 
   const { searchValue } = React.useContext(SearchContext);
-  const [items, setItems] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
 
   const dispatch = useDispatch();
 
@@ -41,48 +38,8 @@ const Home = () => {
     dispatch(setCurrentPage(number));
   };
 
-  const fetchPizzas = () => {
-    setIsLoading(true);
-
-    const order = sortType.includes('-') ? 'asc' : 'desc';
-    const sortBy = sortType.replace('-', '');
-    const category = categoryId > 0 ? `category=${categoryId}` : '';
-    const search = searchValue ? `&title=${searchValue}` : '';
-
-    axios
-      .get(
-        `https://63382940937ea77bfdbb5eea.mockapi.io/items?page=${currentPage}&limit=4&${category}&sortBy=${sortBy}&order=${order}${search}`
-      )
-      .then((res) => {
-        setItems(res.data);
-        setIsLoading(false);
-      });
-  };
-
-  // При первом рендере и так же если изменится одна из переменных categoryId, sortType, currentPage
-  React.useEffect(() => {
-    // console.log('2 проверили, был ли этот компонент отрисован до этого');
-    if (isMounted.current) {
-      // проверяем, был ли этот компонент (Home) уже на странице, или сейчас рендерится первый раз. Если уже был, выполняем код в фигурных скобках, если монтируется в первый раз, тогда не выполняем код со скобок, а только меняем флаг isMounted
-      const queryString = qs.stringify({
-        // этот код, если наш home уже был отрендерен до этого и поменялось одно из значени в стейте, он вшивает строку в строку URL, если же компонент рендерится впервые, в URL строке будет только наш домен без остальных фильтров.
-        sortProperty: sortType,
-        categoryId,
-        currentPage,
-      });
-      // console.log('узнали, что это уже не первая отрисовка');
-      navigate(`?${queryString}`);
-    }
-
-    isMounted.current = true;
-  }, [categoryId, sortType, currentPage]);
-
-  // ======= Посмотрели что еще не был монтирован, поменяли флаг и пошли дальше
-
-  //  Только при первом рендере
   React.useEffect(() => {
     if (window.location.search) {
-      // проверяем есть ли в строке кроме названия магазина какие то параметры для фильтрации, если есть выполняем след действия
       const params = qs.parse(window.location.search.substring(1));
 
       const sort = list.find((obj) => obj.sortProperty === params.sortProperty);
@@ -93,29 +50,82 @@ const Home = () => {
           sort,
         })
       );
-      isSearch.current = true; // то что мы тут поставили тру гарантирует нам, что при первой загрузке сайта после того как мы поменяли стейт и нашли нужные нам пиццы больше не будет запускаться ф-ция из след юзеффекта fetchPizza со строки 106 (только на время первой загрузки)
-      // console.log(
-      //   '3 посмотрели было ли что то в адресной строке, если да, поменяли стейт'
-      // );
+      // getPizzas();
     }
+    // isMounted.current = true;
+  }, []);
+
+  const getPizzas = async () => {
+    const order = sortType.includes('-') ? 'asc' : 'desc';
+    const sortBy = sortType.replace('-', '');
+    const category = categoryId > 0 ? `category=${categoryId}` : '';
+    const search = searchValue ? `&title=${searchValue}` : '';
+    console.log('getPizzas отработал');
+
+    dispatch(
+      fetchPizzas({
+        order,
+        sortBy,
+        category,
+        search,
+        currentPage,
+      })
+    );
+
+    window.scrollTo(0, 0);
+  };
+
+  // React.useEffect(() => {
+  //   if (window.location.search) {
+  //     const params = qs.parse(window.location.search.substring(1));
+
+  //     const sort = list.find((obj) => obj.sortProperty === params.sortProperty);
+
+  //     dispatch(
+  //       setFilters({
+  //         ...params,
+  //         sort,
+  //       })
+  //     );
+  //     // getPizzas();
+  //   }
+  //   // isMounted.current = true;
+  // }, []);
+
+  React.useEffect(() => {
+    if (isMounted.current) {
+      const queryString = qs.stringify({
+        sortProperty: sortType,
+        categoryId,
+        currentPage,
+      });
+      navigate(`?${queryString}`);
+    }
+
+    // if (!window.location.search) {
+    //   console.log(111);
+    //   fetchPizzas(); // непонятно зачем тут это написано, и без этого работает так же, ТАК КАК ПИЦЦЫ ПОЛУЧАЮТСЯ С ПОМОЩЬЮ getPizzas со след useEffect даже при первой загрузке
+    //   // что делает fetchPizzas?
+    // }
+  }, [categoryId, sortType, searchValue, currentPage]);
+
+  useEffect(() => {
+    getPizzas();
+    // if (!isMounted.current) {
+    //   isMounted.current = true;
+    // }
+    // что делает getPizzas? берет параметры из стейта фильтров и используя их генерирует запрос по своему шаблону (указанному в пиццаслайсе), получает конкертные пиццы, которые нужны и меняет стейт, что приводит к ререндеру страницы с нужными пиццами
   }, []);
 
   // ======= Вообще ниче не сделали, т.к строки не было в УРЛЕ
 
-  // если был первый рендер, запрашиваем пиццы
-  useEffect(() => {
-    window.scrollTo(0, 0);
-    // console.log('4 поменяли изсерч на фолс');
-    if (!isSearch.current) {
-      // если при первой загрузке предидущий юзеффект отработал, этот фетч пока не отрабатывает, а только подготовливаем флаг isSearch для последующих действий, и когда будут происходить в след раз изменения на этом сайте, предидущий юзеффект уже отрабатывать не будет, а будет отрабатывать этот fetchPizzas
-      // console.log('5 запросили нужные нам пиццы');
-      fetchPizzas();
-    }
-
-    isSearch.current = false;
-  }, [categoryId, sortType, searchValue, currentPage]);
-
   const pizzas = items.map((obj) => <PizzaBlock key={obj.id} {...obj} />);
+  // items - это массив с объектами
+  // каждый объект в нем - это данные про пиццы, которые мы получили с бекенда после запроса createAsyncThunk
+  // там будут лежать только те пиццы, которые нужно рендерить
+  // мы их получили благодаря правильно динамически сформированному запросу на бекенд
+  // и соотвественно теперь мы делаем для каждого такого объекта карточку на сайте и потом когда нам будет нужно, мы вставим эти карточки на наш сайт
+  // мы получили масси с объектами тех пицц, которые нужно показать, теперь мы в этом массиве каждый отдельный объект с информацией передаем в наш строительный алгоритм pizzablock indes.jsx. Передаем по цепочке, и соотвественно там этот строительный шаблон принимает по одному объекту и для каждого нашего переданного объекта он сделает карточку видимую, которую можно будет показать на сайте и он сделает стольок карточек, сколько таких объектов будет в массииве, который мы мапим, и все эти карточки поместятся в переменную pizzas
   const skeletons = [...new Array(6)].map((_, i) => <Skeleton key={i} />);
 
   return (
@@ -125,7 +135,24 @@ const Home = () => {
         <Sort />
       </div>
       <h2 className="content__title">Все пиццы</h2>
-      <div className="content__items">{isLoading ? skeletons : pizzas}</div>
+      {status === 'rejected' ? (
+        <div className="content__error-info">
+          {' '}
+          <h2>
+            Error ocured <span>😕</span>
+          </h2>
+          <p>
+            Unfortunately we can not fetch pizzas
+            <br />
+            Для того, чтобы заказать пиццу, перейди на главную страницу.
+          </p>
+        </div>
+      ) : (
+        <div className="content__items">
+          {status === 'pending' ? skeletons : pizzas}
+        </div>
+      )}
+
       <Pagination currentPage={currentPage} onChangePage={onChangePage} />
     </div>
   );

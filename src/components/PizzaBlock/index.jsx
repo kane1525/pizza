@@ -6,6 +6,7 @@ import { addItem } from '../../redux/slices/cartSlice';
 const typeNames = ['Тонкое', 'Традиционное'];
 
 function PizzaBlock({ id, title, price, imageUrl, sizes, types }) {
+  // console.log(id, title, price, imageUrl, sizes, types);
   const dispatch = useDispatch();
   const cartItems = useSelector((state) =>
     state.cart.items.filter((item) => item.id === id)
@@ -38,13 +39,13 @@ function PizzaBlock({ id, title, price, imageUrl, sizes, types }) {
         <h4 className="pizza-block__title">{title}</h4>
         <div className="pizza-block__selector">
           <ul>
-            {types.map((type) => (
+            {types.map((ite) => (
               <li
-                key={type}
-                onClick={() => setActiveType(type)}
-                className={activeType === type ? 'active' : ''}
+                key={ite}
+                onClick={() => setActiveType(ite)}
+                className={activeType === ite ? 'active' : ''}
               >
-                {typeNames[type]}
+                {typeNames[ite]}
               </li>
             ))}
           </ul>
