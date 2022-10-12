@@ -19,6 +19,7 @@ import { fetchPizzas } from '../redux/slices/pizzaSlice';
 const Home = () => {
   const navigate = useNavigate();
   const isMounted = React.useRef(false);
+  const isSearch = React.useRef(false);
   const { categoryId, sort, currentPage } = useSelector(
     (state) => state.filter
   );
@@ -37,23 +38,6 @@ const Home = () => {
   const onChangePage = (number) => {
     dispatch(setCurrentPage(number));
   };
-
-  React.useEffect(() => {
-    if (window.location.search) {
-      const params = qs.parse(window.location.search.substring(1));
-
-      const sort = list.find((obj) => obj.sortProperty === params.sortProperty);
-
-      dispatch(
-        setFilters({
-          ...params,
-          sort,
-        })
-      );
-      // getPizzas();
-    }
-    // isMounted.current = true;
-  }, []);
 
   const getPizzas = async () => {
     const order = sortType.includes('-') ? 'asc' : 'desc';
@@ -75,22 +59,22 @@ const Home = () => {
     window.scrollTo(0, 0);
   };
 
-  // React.useEffect(() => {
-  //   if (window.location.search) {
-  //     const params = qs.parse(window.location.search.substring(1));
+  React.useEffect(() => {
+    if (window.location.search) {
+      const params = qs.parse(window.location.search.substring(1));
 
-  //     const sort = list.find((obj) => obj.sortProperty === params.sortProperty);
+      const sort = list.find((obj) => obj.sortProperty === params.sortProperty);
 
-  //     dispatch(
-  //       setFilters({
-  //         ...params,
-  //         sort,
-  //       })
-  //     );
-  //     // getPizzas();
-  //   }
-  //   // isMounted.current = true;
-  // }, []);
+      dispatch(
+        setFilters({
+          ...params,
+          sort,
+        })
+      );
+      isSearch.current = true;
+    }
+    // isMounted.current = true;
+  }, []);
 
   React.useEffect(() => {
     if (isMounted.current) {
@@ -110,12 +94,17 @@ const Home = () => {
   }, [categoryId, sortType, searchValue, currentPage]);
 
   useEffect(() => {
-    getPizzas();
+    if (!isSearch.current) {
+      getPizzas();
+      console.log('отправили запрос');
+    }
+    isSearch.current = false;
+    isMounted.current = true;
     // if (!isMounted.current) {
     //   isMounted.current = true;
     // }
     // что делает getPizzas? берет параметры из стейта фильтров и используя их генерирует запрос по своему шаблону (указанному в пиццаслайсе), получает конкертные пиццы, которые нужны и меняет стейт, что приводит к ререндеру страницы с нужными пиццами
-  }, []);
+  }, [categoryId, sortType, searchValue, currentPage]);
 
   // ======= Вообще ниче не сделали, т.к строки не было в УРЛЕ
 
