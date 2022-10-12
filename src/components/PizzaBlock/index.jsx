@@ -1,18 +1,16 @@
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { addItem } from '../../redux/slices/cartSlice';
+import { addItem, OneKindPizzaSelector } from '../../redux/slices/cartSlice';
 
 const typeNames = ['Тонкое', 'Традиционное'];
 
 function PizzaBlock({ id, title, price, imageUrl, sizes, types }) {
   const dispatch = useDispatch();
-  const cartItems = useSelector((state) =>
-    state.cart.items.filter((item) => item.id === id)
-  );
+  const oneKindPizzaTypes = useSelector(OneKindPizzaSelector(id));
   let num = null;
-  if (cartItems.length > 0) {
-    num = cartItems.reduce((prev, item) => {
+  if (oneKindPizzaTypes.length > 0) {
+    num = oneKindPizzaTypes.reduce((prev, item) => {
       return prev + item.count;
     }, 0);
   }

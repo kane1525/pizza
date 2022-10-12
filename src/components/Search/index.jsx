@@ -1,16 +1,17 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import debounce from 'lodash.debounce';
-import { SearchContext } from '../../App';
 
 import styles from './Search.module.scss';
+import { setSearchValue } from '../../redux/slices/filterSlice';
 const Search = () => {
+  const dispatch = useDispatch();
   const [value, setValue] = React.useState('');
-  const { setSearchValue } = React.useContext(SearchContext);
   const inputRef = React.useRef();
 
   const updateSearchValue = React.useCallback(
     debounce((str) => {
-      setSearchValue(str);
+      dispatch(setSearchValue(str));
     }, 1000),
     []
   );
@@ -18,7 +19,7 @@ const Search = () => {
   // в [] указывается список зависимостей, при изменении которых мы все таки будем пересоздавать нашу ф-цию, которая внутри useCallback
 
   const onClickClear = () => {
-    setSearchValue('');
+    dispatch(setSearchValue(''));
     setValue('');
     // document.querySelector('input').focus();  // так лучше не делать
     inputRef.current.focus(); // так лучше делать

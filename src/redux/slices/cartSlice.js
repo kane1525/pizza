@@ -55,6 +55,11 @@ const cartSlice = createSlice({
   },
 });
 
+export const OneKindPizzaSelector = (id) => (state) =>
+  state.cart.items.filter((item) => item.id === id);
+
+export const cartSelector = (state) => state.cart;
+
 export const { addItem, removeItem, clearItems, minusItem, plusItem } =
   cartSlice.actions;
 
