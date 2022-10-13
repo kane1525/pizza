@@ -2,7 +2,7 @@ import React from 'react';
 import qs from 'qs';
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Categories from '../components/Categories';
 import Sort, { list } from '../components/Sort';
 import PizzaBlock from '../components/PizzaBlock';
@@ -89,7 +89,11 @@ const Home = () => {
     isMounted.current = true;
   }, [categoryId, sortType, searchValue, currentPage]);
 
-  const pizzas = items.map((obj) => <PizzaBlock key={obj.id} {...obj} />);
+  const pizzas = items.map((obj) => (
+    <Link key={obj.id} to={`/pizza/${obj.id}`}>
+      <PizzaBlock {...obj} />
+    </Link>
+  ));
   const skeletons = [...new Array(6)].map((_, i) => <Skeleton key={i} />);
 
   return (
@@ -123,3 +127,13 @@ const Home = () => {
 };
 
 export default Home;
+
+// если мы хотим в зависимости от того что у нас в адресной строчке рендерить что то, мы используем useLocation
+// хук useLocation дает нам понять что адресная строка перерисовалась, и на том компоненте на котором он используется нужно сделать перерисовку
+
+// хук юзпарамс позволяет взять какие то динамические данные с урл строки и использовать их в другом месте, например в запросе
+
+// статические параметры, те которые без : указываются в роутах, можно вытащить с помощью window.location.search или же с помощью роутер дом хука useSearchParams
+// или же в с помощью хука useLocation, внутри того что он возвращает будет свойство search
+
+// Если у нас есть задача что б некоторые части сайта оставались статичными, а другие менялись, мы можем использовать outlet
