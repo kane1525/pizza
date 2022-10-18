@@ -11,17 +11,10 @@ import Pagination from '../components/Pagination';
 import {
   filterStateSelector,
   setcategotyId,
-  setCurrentPage,
   setFilters,
 } from '../redux/slices/filterSlice';
-import {
-  fetchPizzas,
-  pizzasStateSelector,
-  SearchPizzaParams,
-} from '../redux/slices/pizzaSlice';
+import { fetchPizzas, pizzasStateSelector } from '../redux/slices/pizzaSlice';
 import { useAppDispatch } from '../redux/store';
-import { FilterSliceState } from '../redux/slices/filterSlice';
-import { nanoid } from '@reduxjs/toolkit';
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -59,10 +52,6 @@ const Home: React.FC = () => {
         search,
         currentPage: String(currentPage),
       })
-      //2 Связь типов
-      // 2 в этом месте мы подстраиваемся под шаблон type SearchPizzaParams Почему?
-      // потому что там где мы создавали эту ф-цию, мы написали у нее в пропсах, что эти пропсы должны подходить под шаблон SearchPizzaParams
-      // и теперь везде, где мы хотим использовать эту ф-цию, мы должны передать ей пропсы что б они обязательно подходили под такой шаблон
     );
 
     window.scrollTo(0, 0);
@@ -70,29 +59,20 @@ const Home: React.FC = () => {
 
   React.useEffect(() => {
     if (window.location.search) {
-      const params = qs.parse(window.location.search.substring(1)); // тут было ддописано текст as unknown as SearchPizzaParams
-      // наша константа params  если по честному не подходит под шаблон SearchPizzaParams, но пусть компьютер думает, что подходит
+      const params = qs.parse(window.location.search.substring(1));
 
       const sort = list.find((obj) => obj.sortProperty === params.sortProperty);
 
-      // if (typeof params.search === 'string') {
-      // было без этого иф!!!
       dispatch(
         setFilters({
-          // 5 связь типов
-          // ...params,
-          searchValue: '', //params.search,
+          searchValue: '',
           categoryId: Number(params.categoryId),
           currentPage: Number(params.currentPage),
           sort: sort || list[0],
         })
-        // объект, который мы передаем в setFilters обяязательно должен соотвествовать шаблону FilterSliceState Почему?
-        // Потому что в фильтерслайсе там где мы создавали екшн setFilters мы указали, что его пейлоад должен быть FilterSliceState
-        // соотвественно везде, где мы будем выполнять наш екшн setFilters мы должны позаботиться что б пейлоад соотвествовал FilterSliceState
       );
       isSearch.current = true;
     }
-    // }
   }, []);
 
   React.useEffect(() => {
@@ -108,7 +88,6 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     if (!isSearch.current) {
-      // пишем так потому что isSearch создан с помощью useRef и что б обратиться к значению, которое мы установили, неужно писать не просто isSearch, а isSearch.current
       getPizzas();
     }
     isSearch.current = false;
@@ -149,13 +128,3 @@ const Home: React.FC = () => {
 };
 
 export default Home;
-
-// если мы хотим в зависимости от того что у нас в адресной строчке рендерить что то, мы используем useLocation
-// хук useLocation дает нам понять что адресная строка перерисовалась, и на том компоненте на котором он используется нужно сделать перерисовку
-
-// хук юзпарамс позволяет взять какие то динамические данные с урл строки и использовать их в другом месте, например в запросе
-
-// статические параметры, те которые без : указываются в роутах, можно вытащить с помощью window.location.search или же с помощью роутер дом хука useSearchParams
-// или же в с помощью хука useLocation, внутри того что он возвращает будет свойство search
-
-// Если у нас есть задача что б некоторые части сайта оставались статичными, а другие менялись, мы можем использовать outlet

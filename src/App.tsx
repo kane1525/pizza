@@ -14,7 +14,6 @@ function App() {
       <Routes>
         <Route path="/" element={<MainLayout />}>
           {' '}
-          {/*это главнй елемент, который есть у всех вложенный в него елементов, на каком месте у него расположеы вложенные в него улементы? на том месте где в файле MainLayout написано Outlet, там и будут рендериться вложенные в него елементы, при совпадении урла с path*/}
           <Route path="" element={<Home />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/pizza/:id" element={<FullPizza />} />

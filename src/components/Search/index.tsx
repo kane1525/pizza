@@ -15,17 +15,10 @@ const Search: React.FC = () => {
     }, 1000),
     []
   );
-  // useCallback создаст нам такую ф-цию единожды, и в дальнейшем при перерисовке Search он не будет пересоздавать эту ф-цию, а она так же будет лежать в памяти
-  // в [] указывается список зависимостей, при изменении которых мы все таки будем пересоздавать нашу ф-цию, которая внутри useCallback
 
   const onClickClear = () => {
     dispatch(setSearchValue(''));
     setValue('');
-    // 1 способ
-    // if (inputRef.current) {
-    //   inputRef.current.focus();
-    // }
-    // 2 способ
     inputRef.current?.focus();
   };
 

@@ -8,11 +8,6 @@ import {
   Sort,
 } from '../redux/slices/filterSlice';
 
-// type SortItem = {
-//   name: string;
-//   sortProperty: SortPropertyEnum;
-// };
-
 type PopupClick = MouseEvent & {
   path: Node[];
 };

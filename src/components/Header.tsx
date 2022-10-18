@@ -12,9 +12,7 @@ function Header() {
     (sum: number, item: any) => sum + item.count,
     0
   );
-  const location = useLocation(); // с помощью хука
-  // можно вытянуть с помощью window.location, будет почти тоже самое, но разница в том, что если используем хук, приложение будет следить за нашим location и при его обновлении ререндерить компонент, в отличии от window..location, такой подход не будет при обновлении локейшна ререндерить наш компонент
-  // console.log(location);
+  const location = useLocation();
 
   return (
     <div className="header">
