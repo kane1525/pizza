@@ -1,8 +1,8 @@
 import React from 'react';
 import qs from 'qs';
 import { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import Categories from '../components/Categories';
 import Sort, { list } from '../components/Sort';
 import PizzaBlock from '../components/PizzaBlock';
@@ -14,9 +14,16 @@ import {
   setCurrentPage,
   setFilters,
 } from '../redux/slices/filterSlice';
-import { fetchPizzas, pizzasStateSelector } from '../redux/slices/pizzaSlice';
+import {
+  fetchPizzas,
+  pizzasStateSelector,
+  SearchPizzaParams,
+} from '../redux/slices/pizzaSlice';
+import { useAppDispatch } from '../redux/store';
+import { FilterSliceState } from '../redux/slices/filterSlice';
+import { nanoid } from '@reduxjs/toolkit';
 
-const Home = () => {
+const Home: React.FC = () => {
   const navigate = useNavigate();
   const isMounted = React.useRef(false);
   const isSearch = React.useRef(false);
@@ -25,14 +32,17 @@ const Home = () => {
   const { items, status } = useSelector(pizzasStateSelector);
   const sortType = sort.sortProperty;
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  const onChangeCategory = (id) => {
-    dispatch(setcategotyId(id));
+  const onChangeCategory = (idx: number) => {
+    dispatch(setcategotyId(idx));
   };
 
-  const onChangePage = (number) => {
-    dispatch(setCurrentPage(number));
+  const onChangePage = (page: number) => {
+    dispatch({
+      type: 123,
+      entyties: [1, 2, 3, 4],
+    });
   };
 
   const getPizzas = async () => {
@@ -47,8 +57,12 @@ const Home = () => {
         sortBy,
         category,
         search,
-        currentPage,
+        currentPage: String(currentPage),
       })
+      //2 Связь типов
+      // 2 в этом месте мы подстраиваемся под шаблон type SearchPizzaParams Почему?
+      // потому что там где мы создавали эту ф-цию, мы написали у нее в пропсах, что эти пропсы должны подходить под шаблон SearchPizzaParams
+      // и теперь везде, где мы хотим использовать эту ф-цию, мы должны передать ей пропсы что б они обязательно подходили под такой шаблон
     );
 
     window.scrollTo(0, 0);
@@ -56,18 +70,29 @@ const Home = () => {
 
   React.useEffect(() => {
     if (window.location.search) {
-      const params = qs.parse(window.location.search.substring(1));
+      const params = qs.parse(window.location.search.substring(1)); // тут было ддописано текст as unknown as SearchPizzaParams
+      // наша константа params  если по честному не подходит под шаблон SearchPizzaParams, но пусть компьютер думает, что подходит
 
       const sort = list.find((obj) => obj.sortProperty === params.sortProperty);
 
+      // if (typeof params.search === 'string') {
+      // было без этого иф!!!
       dispatch(
         setFilters({
-          ...params,
-          sort,
+          // 5 связь типов
+          // ...params,
+          searchValue: '', //params.search,
+          categoryId: Number(params.categoryId),
+          currentPage: Number(params.currentPage),
+          sort: sort || list[0],
         })
+        // объект, который мы передаем в setFilters обяязательно должен соотвествовать шаблону FilterSliceState Почему?
+        // Потому что в фильтерслайсе там где мы создавали екшн setFilters мы указали, что его пейлоад должен быть FilterSliceState
+        // соотвественно везде, где мы будем выполнять наш екшн setFilters мы должны позаботиться что б пейлоад соотвествовал FilterSliceState
       );
       isSearch.current = true;
     }
+    // }
   }, []);
 
   React.useEffect(() => {
@@ -83,17 +108,14 @@ const Home = () => {
 
   useEffect(() => {
     if (!isSearch.current) {
+      // пишем так потому что isSearch создан с помощью useRef и что б обратиться к значению, которое мы установили, неужно писать не просто isSearch, а isSearch.current
       getPizzas();
     }
     isSearch.current = false;
     isMounted.current = true;
   }, [categoryId, sortType, searchValue, currentPage]);
 
-  const pizzas = items.map((obj) => (
-    <Link key={obj.id} to={`/pizza/${obj.id}`}>
-      <PizzaBlock {...obj} />
-    </Link>
-  ));
+  const pizzas = items.map((obj: any) => <PizzaBlock {...obj} />);
   const skeletons = [...new Array(6)].map((_, i) => <Skeleton key={i} />);
 
   return (

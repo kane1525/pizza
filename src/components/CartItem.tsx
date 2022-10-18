@@ -1,8 +1,20 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
+import clsx from 'clsx';
 import { plusItem, minusItem, removeItem } from '../redux/slices/cartSlice';
 
-const CartItem = ({
+type CartItemProp = {
+  id: string;
+  title: string;
+  price: number;
+  count: number;
+  imageUrl: string;
+  type: string;
+  size: number;
+  nanoid: string;
+};
+
+const CartItem: React.FC<CartItemProp> = ({
   id,
   title,
   price,
@@ -46,8 +58,12 @@ const CartItem = ({
       <div className="cart__item-count">
         <button
           onClick={onClickMinus}
-          disabled=""
-          className="button button--outline button--circle cart__item-count-minus"
+          // disabled=""
+          className={clsx(
+            'button button--outline button--circle cart__item-count-minus',
+            { 'cart-item-count-minus--disabled': count >= 3 }
+            // это написано для примера, с помощью clsx мы можем сдпелать такую запись и все будет работать так: когда каунт нашего карт айтема больше или равно 3, к его кнопке минус будет добавляться класс disabled
+          )}
         >
           <svg
             width="10"
