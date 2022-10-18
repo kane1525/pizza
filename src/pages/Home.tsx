@@ -27,9 +27,9 @@ const Home: React.FC = () => {
 
   const dispatch = useAppDispatch();
 
-  const onChangeCategory = (idx: number) => {
+  const onChangeCategory = React.useCallback((idx: number) => {
     dispatch(setcategotyId(idx));
-  };
+  }, []); // говорим создайся при первом рендере, и потом, когда компонент будет перерисовываться, эту ф-цию пересоздавать не нужно
 
   const onChangePage = (page: number) => {
     dispatch({
@@ -94,14 +94,14 @@ const Home: React.FC = () => {
     isMounted.current = true;
   }, [categoryId, sortType, searchValue, currentPage]);
 
-  const pizzas = items.map((obj: any) => <PizzaBlock {...obj} />);
+  const pizzas = items.map((obj: any) => <PizzaBlock key={obj.id} {...obj} />);
   const skeletons = [...new Array(6)].map((_, i) => <Skeleton key={i} />);
 
   return (
     <div className="container">
       <div className="content__top">
         <Categories value={categoryId} onClickCategory={onChangeCategory} />
-        <Sort />
+        <Sort value={sort} />
       </div>
       <h2 className="content__title">Все пиццы</h2>
       {status === 'rejected' ? (

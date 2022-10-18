@@ -12,6 +12,10 @@ type PopupClick = MouseEvent & {
   path: Node[];
 };
 
+type SortPopupProps = {
+  value: Sort;
+};
+
 export const list: Sort[] = [
   // 4 связь типов
   { name: 'Популярности', sortProperty: SortPropertyEnum.RATING_DESC },
@@ -22,12 +26,14 @@ export const list: Sort[] = [
   { name: '-Алфавиту', sortProperty: SortPropertyEnum.TITLE_ASC },
 ];
 
-function SortPopup() {
+const SortPopup: React.FC<SortPopupProps> = React.memo(({ value }) => {
   const dispatch = useDispatch();
-  const { name, sortProperty } = useSelector(sortSelector);
+  // const { name, sortProperty } = useSelector(sortSelector);
   const sortRef = React.useRef<HTMLDivElement>(null);
 
   const [isVisible, setIsVisible] = useState(false);
+
+  console.log('перерисовал сортПопап изза хома');
 
   const onClickListItem = (obj: Sort) => {
     // 4 связь типов
@@ -70,7 +76,7 @@ function SortPopup() {
           onMouseEnter={() => setIsVisible(true)}
           // onMouseLeave={() => setIsVisible(false)}
         >
-          {name}
+          {value.name}
         </span>
       </div>
       {isVisible && (
@@ -79,7 +85,9 @@ function SortPopup() {
             {list.map((obj, i) => (
               <li
                 key={i}
-                className={sortProperty === obj.sortProperty ? 'active' : ''}
+                className={
+                  value.sortProperty === obj.sortProperty ? 'active' : ''
+                }
                 onClick={() => onClickListItem(obj)}
               >
                 {obj.name}
@@ -90,6 +98,6 @@ function SortPopup() {
       )}
     </div>
   );
-}
+});
 
 export default SortPopup;
