@@ -1,14 +1,11 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { OneKindPizzaSelector } from '../../redux/cart/selectors';
+import { addItem } from '../../redux/cart/slice';
+import { CartItem } from '../../redux/cart/types';
 
-import {
-  addItem,
-  CartItem,
-  OneKindPizzaSelector,
-} from '../../redux/slices/cartSlice';
-
-const typeNames = ['Тонкое', 'Традиционное'];
+const typeNames = ['Тонке', 'Традиційне'];
 
 type PizzaBlockProps = {
   id: string;
@@ -85,7 +82,7 @@ const PizzaBlock: React.FC<PizzaBlockProps> = ({
           </ul>
         </div>
         <div className="pizza-block__bottom">
-          <div className="pizza-block__price">{`от ${price}`}</div>
+          <div className="pizza-block__price">{`від ${price} грн`}</div>
           <button
             onClick={onClickAdd}
             className="button button--outline button--add"
@@ -102,7 +99,7 @@ const PizzaBlock: React.FC<PizzaBlockProps> = ({
                 fill="white"
               />
             </svg>
-            <span>Добавить</span>
+            <span>Додати</span>
             {num && <i>{num}</i>}
           </button>
         </div>

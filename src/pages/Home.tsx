@@ -8,13 +8,16 @@ import Sort, { list } from '../components/Sort';
 import PizzaBlock from '../components/PizzaBlock';
 import Skeleton from '../components/PizzaBlock/Skeleton';
 import Pagination from '../components/Pagination';
+
+import { useAppDispatch } from '../redux/store';
+import { filterStateSelector } from '../redux/filter/selectors';
 import {
-  filterStateSelector,
   setcategotyId,
   setFilters,
-} from '../redux/slices/filterSlice';
-import { fetchPizzas, pizzasStateSelector } from '../redux/slices/pizzaSlice';
-import { useAppDispatch } from '../redux/store';
+  setCurrentPage,
+} from '../redux/filter/slice';
+import { pizzasStateSelector } from '../redux/pizza/selectors';
+import { fetchPizzas } from '../redux/pizza/asyncActions';
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -32,10 +35,11 @@ const Home: React.FC = () => {
   }, []); // говорим создайся при первом рендере, и потом, когда компонент будет перерисовываться, эту ф-цию пересоздавать не нужно
 
   const onChangePage = (page: number) => {
-    dispatch({
-      type: 123,
-      entyties: [1, 2, 3, 4],
-    });
+    // dispatch({
+    //   type: 123,
+    //   entyties: [1, 2, 3, 4],
+    // });
+    dispatch(setCurrentPage(page));
   };
 
   const getPizzas = async () => {
@@ -103,7 +107,7 @@ const Home: React.FC = () => {
         <Categories value={categoryId} onClickCategory={onChangeCategory} />
         <Sort value={sort} />
       </div>
-      <h2 className="content__title">Все пиццы</h2>
+      <h2 className="content__title">Всі піци</h2>
       {status === 'rejected' ? (
         <div className="content__error-info">
           {' '}

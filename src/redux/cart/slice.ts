@@ -1,27 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { nanoid } from '@reduxjs/toolkit';
-import { RootState } from '../store';
+import { getCartFromLS } from '../../utils/getCartFromLS';
+import { CartSliceState, CartItem } from './types';
 
-export type CartItem = {
-  // 6 связь типов
-  id: string;
-  title: string;
-  price: number;
-  imageUrl: string;
-  type: string;
-  size: number;
-  count: number;
-  nanoid?: string;
-};
-
-interface CartSliceState {
-  totalPrice: number;
-  items: CartItem[]; // 6 связь типов
-}
+const { items, totalPrice } = getCartFromLS();
 
 const initialState: CartSliceState = {
-  totalPrice: 0,
-  items: [],
+  totalPrice,
+  items,
 };
 
 const cartSlice = createSlice({
@@ -79,11 +65,6 @@ const cartSlice = createSlice({
     },
   },
 });
-
-export const OneKindPizzaSelector = (id: string) => (state: RootState) =>
-  state.cart.items.filter((item) => item.id === id);
-
-export const cartSelector = (state: RootState) => state.cart;
 
 export const { addItem, removeItem, clearItems, minusItem, plusItem } =
   cartSlice.actions;

@@ -1,12 +1,7 @@
 import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-
-import {
-  setSort,
-  SortPropertyEnum,
-  sortSelector,
-  Sort,
-} from '../redux/slices/filterSlice';
+import { useDispatch } from 'react-redux';
+import { setSort } from '../redux/filter/slice';
+import { Sort, SortPropertyEnum } from '../redux/filter/types';
 
 type PopupClick = MouseEvent & {
   path: Node[];
@@ -18,12 +13,12 @@ type SortPopupProps = {
 
 export const list: Sort[] = [
   // 4 связь типов
-  { name: 'Популярности', sortProperty: SortPropertyEnum.RATING_DESC },
-  { name: '-Популярности', sortProperty: SortPropertyEnum.RATING_ASC },
-  { name: 'Цене', sortProperty: SortPropertyEnum.PRICE_DESC },
-  { name: '-Цене', sortProperty: SortPropertyEnum.PRICE_ASC },
-  { name: 'Алфавиту', sortProperty: SortPropertyEnum.TITLE_DESC },
-  { name: '-Алфавиту', sortProperty: SortPropertyEnum.TITLE_ASC },
+  { name: 'Популярності', sortProperty: SortPropertyEnum.RATING_DESC },
+  { name: '-Популярності', sortProperty: SortPropertyEnum.RATING_ASC },
+  { name: 'Ціні', sortProperty: SortPropertyEnum.PRICE_DESC },
+  { name: '-Ціні', sortProperty: SortPropertyEnum.PRICE_ASC },
+  { name: 'Алфавіту', sortProperty: SortPropertyEnum.TITLE_DESC },
+  { name: '-Алфавіту', sortProperty: SortPropertyEnum.TITLE_ASC },
 ];
 
 const SortPopup: React.FC<SortPopupProps> = React.memo(({ value }) => {
@@ -32,8 +27,6 @@ const SortPopup: React.FC<SortPopupProps> = React.memo(({ value }) => {
   const sortRef = React.useRef<HTMLDivElement>(null);
 
   const [isVisible, setIsVisible] = useState(false);
-
-  console.log('перерисовал сортПопап изза хома');
 
   const onClickListItem = (obj: Sort) => {
     // 4 связь типов
@@ -44,7 +37,7 @@ const SortPopup: React.FC<SortPopupProps> = React.memo(({ value }) => {
   React.useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       const _e = e as PopupClick;
-      if (sortRef.current && !_e.path.includes(sortRef.current)) {
+      if (sortRef.current && !_e.path?.includes(sortRef.current)) {
         setIsVisible(false);
       }
     };
@@ -71,7 +64,7 @@ const SortPopup: React.FC<SortPopupProps> = React.memo(({ value }) => {
             fill="#2C2C2C"
           />
         </svg>
-        <b>Сортировка по:</b>
+        <b>Сортувати по:</b>
         <span
           onMouseEnter={() => setIsVisible(true)}
           // onMouseLeave={() => setIsVisible(false)}

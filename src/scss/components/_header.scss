@@ -9,11 +9,29 @@
     align-items: center;
     justify-content: space-between;
 
-    @media (max-width: 645px) {
+    .button {
+      min-width: 140px;
+      * {
+        flex-shrink: 0;
+      }
+    }
+
+    @media (max-width: 850px) {
       flex-direction: column;
+
+      a {
+        margin-bottom: 20px;
+      }
+
+      div {
+        left: 0;
+      }
 
       .header__cart {
         margin-top: 30px;
+        .button {
+          flex-wrap: nowrap;
+        }
       }
     }
   }

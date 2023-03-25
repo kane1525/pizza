@@ -7,17 +7,17 @@ type CategoriesProps = {
 };
 
 const categories = [
-  'Все',
-  'Мясные',
-  'Вегетерианская',
+  'Всі',
+  `М'ясні`,
+  'Вегетеріанська',
   'Гриль',
-  'Острые',
-  'Закрытые',
+  'Гострі',
+  'Закриті',
 ];
 
 const Categories: React.FC<CategoriesProps> = React.memo(
   ({ value, onClickCategory }) => {
-    useWhyDidYouUpdate('Categories', { value, onClickCategory });
+    // useWhyDidYouUpdate('Categories', { value, onClickCategory });
     // в компоненте, который хотим узнать почему перерисовывается длеаем такую строчку
     // в аршгументах указываем 1- название компонента, 2 - агрументы, которые этот компонент принимает
     // заходим в констль и сморим что не так

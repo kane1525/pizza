@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import clsx from 'clsx';
-import { plusItem, minusItem, removeItem } from '../redux/slices/cartSlice';
+import { plusItem, removeItem, minusItem } from '../redux/cart/slice';
 
 type CartItemProp = {
   id: string;
@@ -106,7 +106,7 @@ const CartItem: React.FC<CartItemProp> = ({
         </button>
       </div>
       <div className="cart__item-price">
-        <b>{price * count} ₽</b>
+        <b>{price * count} грн</b>
       </div>
       <div className="cart__item-remove">
         <div
