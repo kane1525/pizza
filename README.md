@@ -1,70 +1,32 @@
-# Getting Started with Create React App
+# Welcome to Pizza Commercial Project 👋
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+In August 2022, I completed this project by utilizing a YouTube course as my primary source of guidance. While I acknowledge that replicating content from videos may not be the most ideal approach, I dedicated significant time and effort towards this project. Whenever I encountered difficulties, I would pause the video, carefully learn new topic and just then continue watching course. I tried to understand every part of the code and learned a lot of new things. So, I think this project should be in my portfolio.
 
-## Available Scripts
+### ✨ [Project Demo](https://social-network-project-sable.vercel.app)
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+- Whole app built using React
+- Cart implemented using Redux
+- All the cart items are persisted in local storage
+- React Router to enable client-side routing and allow for a smooth, seamless user experience
+- Work with server API using Axios
+- Pagination using react-paginate
+- Skeletons when pizza loading using react-content-loader
+- Debounce when searching for pizza by keywords in order not to overload the server
+- Filtering pizza by categories
+- Sorting pizza by price, popularity, alphabet
+- We can share links with settings of sorting and filtering
+- Responsive and adaptive design. We can use this app for both mobiles and laptops
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Troubles
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- We can search for pizza by words only within the 'Всі' category due to API issues
 
-### `npm test`
+## Images of The Social Network:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+![Pizza Commercial Pizza Page](https://github.com/kane1525/pizza/blob/master/pizza-project-images/pizza-page.png)
+![Pizza Commercial Pizza Empty Page](https://github.com/kane1525/pizza/blob/master/pizza-project-images/pizza-emty-page.png)
+![Pizza Commercial Cart Page](https://github.com/kane1525/pizza/blob/master/pizza-project-images/cart-with-items-page.png)
+![Pizza Commercial Cart Empty Page](https://github.com/kane1525/pizza/blob/master/pizza-project-images/cart-empty-page.png)
+![Pizza Commercial Not-Found Page](https://github.com/kane1525/pizza/blob/master/pizza-project-images/not-found-page.png)

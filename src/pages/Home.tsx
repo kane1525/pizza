@@ -35,10 +35,6 @@ const Home: React.FC = () => {
   }, []); // говорим создайся при первом рендере, и потом, когда компонент будет перерисовываться, эту ф-цию пересоздавать не нужно
 
   const onChangePage = (page: number) => {
-    // dispatch({
-    //   type: 123,
-    //   entyties: [1, 2, 3, 4],
-    // });
     dispatch(setCurrentPage(page));
   };
 
@@ -61,7 +57,7 @@ const Home: React.FC = () => {
     window.scrollTo(0, 0);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (window.location.search) {
       const params = qs.parse(window.location.search.substring(1));
 
@@ -78,9 +74,11 @@ const Home: React.FC = () => {
       isSearch.current = true;
     }
   }, []);
+  // Якщо перша загрузка сторінки включає параметри пошуку
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isMounted.current) {
+      console.log('2');
       const queryString = qs.stringify({
         sortProperty: sortType,
         categoryId,
@@ -89,6 +87,7 @@ const Home: React.FC = () => {
       navigate(`?${queryString}`);
     }
   }, [categoryId, sortType, searchValue, currentPage]);
+  // Якщо вже було змаунчено і ми щось міняєио, міняємо також урлу
 
   useEffect(() => {
     if (!isSearch.current) {
@@ -97,6 +96,8 @@ const Home: React.FC = () => {
     isSearch.current = false;
     isMounted.current = true;
   }, [categoryId, sortType, searchValue, currentPage]);
+  // На перший раз, якщо є серчпарамс не відпрацює
+  // Всі останні рази при зміні параметрів пошуку відпрацює
 
   const pizzas = items.map((obj: any) => <PizzaBlock key={obj.id} {...obj} />);
   const skeletons = [...new Array(6)].map((_, i) => <Skeleton key={i} />);
@@ -110,14 +111,13 @@ const Home: React.FC = () => {
       <h2 className="content__title">Всі піци</h2>
       {status === 'rejected' ? (
         <div className="content__error-info">
-          {' '}
           <h2>
             Error ocured <span>😕</span>
           </h2>
           <p>
             Unfortunately we can not fetch pizzas
             <br />
-            Для того, чтобы заказать пиццу, перейди на главную страницу.
+            Щоб замовити піцу перейдіть на головну сторінку
           </p>
         </div>
       ) : (

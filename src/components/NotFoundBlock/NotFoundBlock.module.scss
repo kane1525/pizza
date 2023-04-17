@@ -9,4 +9,17 @@
 
 .description {
   font-size: 22px;
+  margin-bottom: 20px;
+}
+
+.buttonBlack {
+  padding: 12px 30px 14px;
+  margin: 0 auto;
+  font-weight: 600;
+  font-size: 18px;
+  background-color: black;
+}
+
+.buttonBlack:hover {
+  background-color: #353535;
 }

@@ -19,6 +19,7 @@ const Search: React.FC = () => {
   const onClickClear = () => {
     dispatch(setSearchValue(''));
     setValue('');
+    updateSearchValue('');
     inputRef.current?.focus();
   };
 
