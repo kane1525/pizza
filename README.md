@@ -2,7 +2,7 @@
 
 In August 2022, I completed this project by utilizing a YouTube course as my primary source of guidance. While I acknowledge that replicating content from videos may not be the most ideal approach, I dedicated significant time and effort towards this project. Whenever I encountered difficulties, I would pause the video, carefully learn new topic and just then continue watching course. I tried to understand every part of the code and learned a lot of new things. So, I think this project should be in my portfolio.
 
-### ✨ [Project Demo](https://pizza-ktwqmkb3s-kane1525.vercel.app/)
+### ✨ [Project Demo](https://pizza-ruby.vercel.app/)
 
 ## Features
 
