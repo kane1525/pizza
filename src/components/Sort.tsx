@@ -36,8 +36,7 @@ const SortPopup: React.FC<SortPopupProps> = React.memo(({ value }) => {
 
   React.useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      const _e = e as PopupClick;
-      if (sortRef.current && !_e.path?.includes(sortRef.current)) {
+      if (sortRef.current && !sortRef.current.contains(e.target as Node)) {
         setIsVisible(false);
       }
     };
@@ -66,14 +65,15 @@ const SortPopup: React.FC<SortPopupProps> = React.memo(({ value }) => {
         </svg>
         <b>Сортувати по:</b>
         <span
-          onMouseEnter={() => setIsVisible(true)}
-          // onMouseLeave={() => setIsVisible(false)}
+          onClick={() => {
+            setIsVisible(!isVisible);
+          }}
         >
           {value.name}
         </span>
       </div>
       {isVisible && (
-        <div onMouseLeave={() => setIsVisible(false)} className="sort__popup">
+        <div onClick={() => setIsVisible(false)} className="sort__popup">
           <ul>
             {list.map((obj, i) => (
               <li

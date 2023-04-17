@@ -78,7 +78,6 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     if (isMounted.current) {
-      console.log('2');
       const queryString = qs.stringify({
         sortProperty: sortType,
         categoryId,

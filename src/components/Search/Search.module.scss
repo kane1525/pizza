@@ -1,5 +1,7 @@
 .root {
   position: relative;
+  width: 100%;
+  max-width: 400px;
 }
 
 .input {
@@ -7,6 +9,7 @@
   padding: 12px 20px;
   padding-left: 42px;
   width: 400px;
+  max-width: 100%;
   border-radius: 10px;
   font-size: 16px;
   transition: all 0.15s ease-in-out;

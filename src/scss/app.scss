@@ -16,7 +16,7 @@ body {
   max-width: 1400px;
 
   @media (max-width: 645px) {
-    width: calc(100vw - 30px);
+    width: calc(100%);
     margin-top: 15px;
   }
 }
@@ -119,6 +119,11 @@ body {
       margin: 0;
     }
   }
+}
+
+.container img {
+  max-width: 100%;
+  aspect-ratio: 1 / 1;
 }
 
 .cart {
@@ -351,6 +356,7 @@ body {
   &--empty {
     margin: 80px auto;
     width: 620px;
+    max-width: 100%;
     text-align: center;
 
     h2 {
