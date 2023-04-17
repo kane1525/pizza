@@ -23,7 +23,7 @@ In August 2022, I completed this project by utilizing a YouTube course as my pri
 
 - We can search for pizza by words only within the 'Всі' category due to API issues
 
-## Images of The Social Network:
+## Images of The Project:
 
 ![Pizza Commercial Pizza Page](https://github.com/kane1525/pizza/blob/master/pizza-project-images/pizza-page.png)
 ![Pizza Commercial Pizza Empty Page](https://github.com/kane1525/pizza/blob/master/pizza-project-images/pizza-emty-page.png)
